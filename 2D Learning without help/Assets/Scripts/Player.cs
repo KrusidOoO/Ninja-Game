@@ -10,19 +10,18 @@ public class Player : MonoBehaviour
     public Rigidbody2D RB2D;
     private GameObject TextTrigger;
     private GameObject player;
+    private GameObject PlayerEvolved;
 
     //Floats
     public float Speed = 20f;
     float HorizontalMovement = 0f;
-    float VerticalMovement = 0f;
 
     //Bools
     public bool CanMove;
     bool jump;
     bool crouch;
-    bool jumpAtk;
-    bool Atk;
     bool isCrouching;
+    bool jumpAtk;
 
     //GameObjcts
     
@@ -35,9 +34,12 @@ public class Player : MonoBehaviour
         RB2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         CanMove = true;
+        jumpAtk = false;
         animator.SetBool("canMove", true);
         TextTrigger = GameObject.Find("Text trigger");
         player = GameObject.Find("Player");
+        PlayerEvolved = GameObject.Find("PlayerEvolved");
+        PlayerEvolved.SetActive(false);
     }
 
     // Update is called once per frame
@@ -66,18 +68,12 @@ public class Player : MonoBehaviour
             }
             if (Input.GetButtonDown("Attack"))
             {
-                Atk = true;
-                animator.SetBool("IsAttacking", true);
-            }
-            else if (Input.GetButtonUp("Attack"))
-            {
-                animator.SetBool("IsAttacking", false);
+                animator.SetTrigger("IsAttacking");
             }
             if (Input.GetButtonDown("JumpAtk"))
             {
-                jump = true;
                 jumpAtk = true;
-                animator.SetBool("IsJumpAtk", true);
+                animator.SetTrigger("IsJumpAtk");
             }
         }
         else if (!CanMove)
@@ -85,7 +81,6 @@ public class Player : MonoBehaviour
             animator.SetBool("canMove", false);
             controller.Move(0, false,false);
             jump = false;
-            jumpAtk = false;
         }
     }
 
@@ -119,12 +114,14 @@ public class Player : MonoBehaviour
 
     }
 
-    private void OnCollisionEnter2D(Collision2D col)
+    private void OntriggerEnter2D(Collider2D col)
     {
         if (col.gameObject.name == "Sword")
         {
             col.gameObject.SetActive(false);
             player.transform.Find("PlayerEvolved");
+            PlayerEvolved.SetActive(true);
+            player.SetActive(false);
         }
     }
 
@@ -132,8 +129,6 @@ public class Player : MonoBehaviour
     {
         controller.Move(HorizontalMovement * Time.fixedDeltaTime, crouch, jump);
         jump = false;
-        jumpAtk = false;
-        Atk = false;
         CanMove = true;
     }
 }
