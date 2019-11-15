@@ -6,12 +6,12 @@ public class TriggerEnemyNinja : MonoBehaviour
 {
     //References
     public GameObject ParticleEffect;
-    public Transform SmokeStopStart;
+    public GameObject SmokeStopStart;
+
     
     void Start()
     {
-        ParticleEffect = GameObject.Find("Smoke Bomb");
-        ParticleEffect.SetActive(false);
+        SmokeStopStart = GameObject.Find("Smoke Bomb");
         SmokeStopStart.GetComponent<ParticleSystem>().Stop();
     }
 
@@ -19,7 +19,6 @@ public class TriggerEnemyNinja : MonoBehaviour
     {
         if(collision.gameObject.name=="Player")
         {
-            ParticleEffect.SetActive(true);
             SmokeStopStart.GetComponent<ParticleSystem>().Play();
             StartCoroutine(KillSwitch());
         }
@@ -28,8 +27,8 @@ public class TriggerEnemyNinja : MonoBehaviour
     IEnumerator KillSwitch()
     {
         yield return new WaitForSeconds(1);
+        Destroy(SmokeStopStart);
         Destroy(gameObject);
-        Destroy(ParticleEffect);
         SmokeStopStart.GetComponent<ParticleSystem>().Stop();
     }
 

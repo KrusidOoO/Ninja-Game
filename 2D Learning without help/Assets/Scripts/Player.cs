@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     public Rigidbody2D RB2D;
     private GameObject TextTrigger;
     private GameObject player;
-    private GameObject PlayerEvolved;
+    private GameObject playerEvolved;
 
     //Floats
     public float Speed = 20f;
@@ -38,14 +38,17 @@ public class Player : MonoBehaviour
         animator.SetBool("canMove", true);
         TextTrigger = GameObject.Find("Text trigger");
         player = GameObject.Find("Player");
-        PlayerEvolved = GameObject.Find("PlayerEvolved");
-        PlayerEvolved.SetActive(false);
+        playerEvolved = GameObject.Find("PlayerEvolved");
+        playerEvolved.GetComponent<SpriteRenderer>().enabled = false;
+        playerEvolved.GetComponent<BoxCollider2D>().enabled = false;
+        playerEvolved.GetComponent<CircleCollider2D>().enabled=false;
+        playerEvolved.GetComponent<Rigidbody2D>().gravityScale = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (CanMove)
+        if (CanMove == true)
         {
             HorizontalMovement = Input.GetAxisRaw("Horizontal") * Speed;
             animator.SetFloat("Speed", Mathf.Abs(HorizontalMovement));
@@ -72,15 +75,19 @@ public class Player : MonoBehaviour
             }
             if (Input.GetButtonDown("JumpAtk"))
             {
+                jump = true;
                 jumpAtk = true;
-                animator.SetTrigger("IsJumpAtk");
+                animator.SetTrigger("IsJumpAttacking");
             }
         }
-        else if (!CanMove)
+        else if (CanMove==false)
         {
-            animator.SetBool("canMove", false);
             controller.Move(0, false,false);
             jump = false;
+            jumpAtk=false;
+            crouch = false;
+            HorizontalMovement = 0f;
+            animator.SetFloat("Speed", 0f);
         }
     }
 
@@ -88,11 +95,14 @@ public class Player : MonoBehaviour
     {
         if (player.gameObject.name == "Text trigger")
         {
+            CanMove = false;
+            animator.SetBool("canMove", false);
             FindObjectOfType<DialougeTrigger>().TriggerDialogue();
             StartCoroutine("KillSwitch");
             while(animator.GetBool("IsOpen")==true)
             {
                 CanMove = false;
+                animator.SetBool("canMove", false);
             }
         }
     }
@@ -114,21 +124,30 @@ public class Player : MonoBehaviour
 
     }
 
-    private void OntriggerEnter2D(Collider2D col)
+    
+    private void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.name == "Sword")
         {
-            col.gameObject.SetActive(false);
-            player.transform.Find("PlayerEvolved");
-            PlayerEvolved.SetActive(true);
+            Destroy(GameObject.Find("Sword"));
+            Destroy(GameObject.Find("Player Cam"));
+            Destroy(GameObject.Find("Player"));
+            playerEvolved.GetComponent<SpriteRenderer>().enabled=true;
+            playerEvolved.GetComponent<BoxCollider2D>().enabled = true;
+            playerEvolved.GetComponent<CircleCollider2D>().enabled=true;
+            playerEvolved.GetComponent<Rigidbody2D>().gravityScale = 3;
+            playerEvolved.transform.position = player.transform.position;
             player.SetActive(false);
+            Debug.Log("Player has been transformed");
         }
     }
 
     private void FixedUpdate()
     {
+        CanMove = true;
         controller.Move(HorizontalMovement * Time.fixedDeltaTime, crouch, jump);
         jump = false;
-        CanMove = true;
+        crouch=false;
+        animator.SetBool("canMove", true);
     }
 }
