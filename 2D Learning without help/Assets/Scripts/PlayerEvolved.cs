@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class PlayerEvolved : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class PlayerEvolved : MonoBehaviour
     float HorizontalMovement = 0f;
 
     //Bools
-    public bool CanMove;
+    bool CanMove;
     bool jump;
     bool crouch;
     bool isCrouching;
@@ -35,8 +36,6 @@ public class PlayerEvolved : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(CanMove)
-        {
             animator.SetBool("canMove", true);
             HorizontalMovement = Input.GetAxisRaw("Horizontal") * Speed;
             animator.SetFloat("Speed", Mathf.Abs(HorizontalMovement));
@@ -44,7 +43,7 @@ public class PlayerEvolved : MonoBehaviour
             if(Input.GetButtonDown("Jump"))
             {
                 jump = true;
-                animator.SetBool("IsJumping", true);
+                animator.SetBool("IsJumping",true);
             }
             if(Input.GetButtonDown("Crouch"))
             {
@@ -70,20 +69,8 @@ public class PlayerEvolved : MonoBehaviour
             {
                 animator.SetTrigger("StrikeAtk");
             }
-            
-        }
-        else if(!CanMove)
-        {
-            controller.Move(0, false, false);
-            jump = false;
-            jumpAtk = false;
-            crouch = false;
-            HorizontalMovement = 0f;
-            animator.SetFloat("Speed", 0f);
-        }
 
     }
-
     public void OnLanding()
     {
         animator.SetBool("IsJumping", false);
