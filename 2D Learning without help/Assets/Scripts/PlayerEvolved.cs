@@ -45,6 +45,10 @@ public class PlayerEvolved : MonoBehaviour
                 jump = true;
                 animator.SetBool("IsJumping",true);
             }
+            else if(Input.GetButtonUp("Jump"))
+            {
+                animator.SetBool("IsJumping", false);
+            }
             if(Input.GetButtonDown("Crouch"))
             {
                 crouch = true;
@@ -73,7 +77,7 @@ public class PlayerEvolved : MonoBehaviour
     }
     public void OnLanding()
     {
-        animator.SetBool("IsJumping", false);
+
     }
 
     public void OnCrouching()
