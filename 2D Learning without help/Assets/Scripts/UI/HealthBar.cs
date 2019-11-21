@@ -6,9 +6,9 @@ using CodeMonkey;
 
 public class HealthBar : MonoBehaviour
 {
-    private Health health;
-    private Image barImage;
-    private Button button;
+    public Health health;
+    public Image barImage;
+    public Button button;
     private void Awake()
     {
         barImage = transform.Find("Health").GetComponent<Image>();
@@ -28,8 +28,8 @@ public class HealthBar : MonoBehaviour
     public class Health
     {
         public const int Health_Max = 100;
-        private float healthAmount;
-        private float healthRegenAmount;
+        public float healthAmount;
+        public float healthRegenAmount;
         public Health()
         {
             healthAmount = 100f;

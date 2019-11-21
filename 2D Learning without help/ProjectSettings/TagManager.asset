@@ -8,6 +8,7 @@ TagManager:
   - NPC
   - Interactions
   - Enemy
+  - HealthPotions
   layers:
   - Default
   - TransparentFX
