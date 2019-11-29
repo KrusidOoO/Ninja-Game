@@ -28,7 +28,7 @@ public class HealthPotion : MonoBehaviour
     {
         if (collision.gameObject.name == "Player" || collision.gameObject.name == "PlayerEvolved")
         {
-            healthBar.GetComponent<Health>().healthRegenAmount = new Health().healthRegenAmount = 30f;
+            healthBar.GetComponent<Health>().healthRegenAmount = new Health().healthRegenAmount = 30f*1;
             Destroy(GameObject.Find("Health Potion"));
         }
     }
