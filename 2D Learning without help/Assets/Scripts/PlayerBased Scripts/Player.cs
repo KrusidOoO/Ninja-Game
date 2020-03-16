@@ -1,13 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
 
 public class Player : MonoBehaviour
 {
     //References
     public Animator animator;
-    public CharacterController2D controller;
+    public CharacterController controller;
     public Rigidbody2D RB2D;
     private GameObject TextTrigger;
     private GameObject player;
@@ -121,7 +120,6 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         CanMove = true;
-        controller.Move(HorizontalMovement * Time.fixedDeltaTime, crouch, jump);
         jump = false;
         crouch=false;
         animator.SetBool("canMove", true);
